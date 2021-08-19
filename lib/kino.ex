@@ -90,6 +90,14 @@ defmodule Kino do
 
       Kino.Ecto.new(Weather, Repo)
 
+  ### Kino.Explorer
+
+  `Kino.Explorer` implements a data table output for [Explorer](https://github.com/amplifiedai/explorer)
+  data frames:
+
+      df = Explorer.Datasets.fossil_fuels()
+      Kino.Explorer.new(df)
+
   ### All others
 
   All other data structures are rendered as text using Elixir's
