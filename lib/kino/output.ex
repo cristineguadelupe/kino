@@ -87,8 +87,9 @@ defmodule Kino.Output do
   And expect the following reply:
 
       @type column :: %{
-        key: term(),
-        label: binary()
+        :key => term(),
+        :label => binary(),
+        optional(:type) => binary()
       }
 
       {:connect_reply, %{

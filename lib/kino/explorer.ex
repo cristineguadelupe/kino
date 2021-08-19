@@ -10,8 +10,6 @@ defmodule Kino.Explorer do
 
   use GenServer, restart: :temporary
 
-  alias Kino.Utils.Table
-
   defstruct [:pid]
 
   @type t :: %__MODULE__{pid: pid()}
@@ -49,20 +47,27 @@ defmodule Kino.Explorer do
     parent_monitor_ref = Process.monitor(parent)
 
     total_rows = Explorer.DataFrame.n_rows(df)
-    keys = Explorer.DataFrame.names(df)
 
     {:ok,
      %{
        parent_monitor_ref: parent_monitor_ref,
        df: df,
-       keys: keys,
        total_rows: total_rows
      }}
   end
 
   @impl true
   def handle_info({:connect, pid}, state) do
-    columns = Table.keys_to_columns(state.keys)
+    names = Explorer.DataFrame.names(state.df)
+    dtypes = Explorer.DataFrame.dtypes(state.df)
+
+    columns =
+      names
+      |> Enum.zip(dtypes)
+      |> Enum.map(fn {name, dtype} ->
+        %{key: name, label: to_string(name), type: to_string(dtype)}
+      end)
+
     features = [:pagination, :sorting]
 
     send(pid, {:connect_reply, %{name: "DataFrame", columns: columns, features: features}})
@@ -72,7 +77,16 @@ defmodule Kino.Explorer do
 
   def handle_info({:get_rows, pid, rows_spec}, state) do
     records = get_records(state.df, rows_spec)
-    rows = Enum.map(records, &Table.record_to_row(&1, state.keys))
+
+    rows =
+      Enum.map(records, fn record ->
+        fields =
+          Map.new(record, fn {col_name, value} ->
+            {col_name, to_string(value)}
+          end)
+
+        %{id: nil, fields: fields}
+      end)
 
     send(pid, {:rows, %{rows: rows, total_rows: state.total_rows, columns: :initial}})
 
@@ -99,9 +113,7 @@ defmodule Kino.Explorer do
     lists
     |> Enum.zip()
     |> Enum.map(fn row ->
-      cols
-      |> Enum.zip(Tuple.to_list(row))
-      |> Map.new()
+      Enum.zip(cols, Tuple.to_list(row))
     end)
   end
 end

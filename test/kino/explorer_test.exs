@@ -17,8 +17,8 @@ defmodule Kino.ExplorerTest do
       assert_receive {:connect_reply,
                       %{
                         columns: [
-                          %{key: "id", label: ~s{"id"}},
-                          %{key: "name", label: ~s{"name"}}
+                          %{key: "id", label: "id", type: "integer"},
+                          %{key: "name", label: "name", type: "string"}
                         ],
                         features: [:pagination, :sorting]
                       }}
@@ -37,9 +37,9 @@ defmodule Kino.ExplorerTest do
       assert_receive {:rows,
                       %{
                         rows: [
-                          %{id: _, fields: %{"id" => "3", "name" => ~s/"Amy Santiago"/}},
-                          %{id: _, fields: %{"id" => "1", "name" => ~s/"Jake Peralta"/}},
-                          %{id: _, fields: %{"id" => "2", "name" => ~s/"Terry Jeffords"/}}
+                          %{id: _, fields: %{"id" => "3", "name" => "Amy Santiago"}},
+                          %{id: _, fields: %{"id" => "1", "name" => "Jake Peralta"}},
+                          %{id: _, fields: %{"id" => "2", "name" => "Terry Jeffords"}}
                         ],
                         total_rows: 3,
                         columns: :initial
@@ -62,9 +62,9 @@ defmodule Kino.ExplorerTest do
       assert_receive {:rows,
                       %{
                         rows: [
-                          %{id: _, fields: %{"id" => "2", "name" => ~s/"Terry Jeffords"/}},
-                          %{id: _, fields: %{"id" => "1", "name" => ~s/"Jake Peralta"/}},
-                          %{id: _, fields: %{"id" => "3", "name" => ~s/"Amy Santiago"/}}
+                          %{id: _, fields: %{"id" => "2", "name" => "Terry Jeffords"}},
+                          %{id: _, fields: %{"id" => "1", "name" => "Jake Peralta"}},
+                          %{id: _, fields: %{"id" => "3", "name" => "Amy Santiago"}}
                         ],
                         total_rows: 3,
                         columns: :initial
@@ -87,7 +87,7 @@ defmodule Kino.ExplorerTest do
       assert_receive {:rows,
                       %{
                         rows: [
-                          %{id: _, fields: %{"id" => "2", "name" => ~s/"Terry Jeffords"/}}
+                          %{id: _, fields: %{"id" => "2", "name" => "Terry Jeffords"}}
                         ],
                         total_rows: 3,
                         columns: :initial
