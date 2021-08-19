@@ -30,6 +30,7 @@ defmodule Kino.MixProject do
     [
       {:vega_lite, "~> 0.1.0", optional: true},
       {:ecto, "~> 3.0", optional: true},
+      {:explorer, "~> 0.1.0-dev", github: "amplifiedai/explorer", branch: "main", optional: true},
       {:ex_doc, "~> 0.24", only: :dev, runtime: false}
     ]
   end
