@@ -100,7 +100,7 @@ defmodule Kino.Explorer do
   defp get_records(df, rows_spec) do
     df =
       if order_by = rows_spec[:order_by] do
-        Explorer.DataFrame.arrange(df, [{order_by, rows_spec.order}])
+        Explorer.DataFrame.arrange(df, [{rows_spec.order, order_by}])
       else
         df
       end
